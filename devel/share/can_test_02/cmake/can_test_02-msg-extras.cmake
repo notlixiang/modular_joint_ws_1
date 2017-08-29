@@ -1,0 +1,2 @@
+set(can_test_02_MESSAGE_FILES "/home/null/ros_ws/modular_joint_ws_1/src/can_test_02/msg/recv.msg;/home/null/ros_ws/modular_joint_ws_1/src/can_test_02/msg/orig.msg;/home/null/ros_ws/modular_joint_ws_1/src/can_test_02/msg/orig_new.msg;/home/null/ros_ws/modular_joint_ws_1/src/can_test_02/msg/UpToDown.msg;/home/null/ros_ws/modular_joint_ws_1/src/can_test_02/msg/DownToUp.msg")
+set(can_test_02_SERVICE_FILES "/home/null/ros_ws/modular_joint_ws_1/src/can_test_02/srv/AddTwoInts.srv")

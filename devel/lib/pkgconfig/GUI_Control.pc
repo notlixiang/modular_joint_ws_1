@@ -1,0 +1,8 @@
+prefix=/home/null/ros_ws/modular_joint_ws_1/devel
+
+Name: GUI_Control
+Description: Description of GUI_Control
+Version: 0.1.0
+Cflags: 
+Libs: -L/home/null/ros_ws/modular_joint_ws_1/devel/lib 
+Requires: 

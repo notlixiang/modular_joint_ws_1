@@ -1,0 +1,8 @@
+prefix=/home/null/ros_ws/modular_joint_ws_1/devel
+
+Name: robot_moveit_config
+Description: Description of robot_moveit_config
+Version: 0.3.0
+Cflags: 
+Libs: -L/home/null/ros_ws/modular_joint_ws_1/devel/lib 
+Requires: 

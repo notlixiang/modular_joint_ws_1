@@ -1,0 +1,8 @@
+prefix=/home/null/ros_ws/modular_joint_ws_1/devel
+
+Name: hardWare_setting
+Description: Description of hardWare_setting
+Version: 0.1.0
+Cflags: 
+Libs: -L/home/null/ros_ws/modular_joint_ws_1/devel/lib 
+Requires: 

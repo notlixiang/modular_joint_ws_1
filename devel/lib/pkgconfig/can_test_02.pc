@@ -1,0 +1,8 @@
+prefix=/home/null/ros_ws/modular_joint_ws_1/devel
+
+Name: can_test_02
+Description: Description of can_test_02
+Version: 0.0.0
+Cflags: -I/home/null/ros_ws/modular_joint_ws_1/devel/include
+Libs: -L/home/null/ros_ws/modular_joint_ws_1/devel/lib 
+Requires: actionlib actionlib_msgs roscpp rospy std_msgs message_runtime message_generation

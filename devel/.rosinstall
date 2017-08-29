@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/null/ros_ws/modular_joint_ws_1/devel/setup.sh
