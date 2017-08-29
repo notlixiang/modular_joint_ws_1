@@ -1,0 +1,8 @@
+prefix=/home/smj/ros/ws_ythgj/src/hardWare/qt-build/devel
+
+Name: hardWare_setting
+Description: Description of hardWare_setting
+Version: 0.1.0
+Cflags: 
+Libs: -L/home/smj/ros/ws_ythgj/src/hardWare/qt-build/devel/lib 
+Requires: 

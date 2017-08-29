@@ -1,0 +1,214 @@
+<?xml version='1.0'?>
+<robot name="robot">
+  <link name="base_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://robot_description/meshes/platform.stl"/>
+        </geometry>
+        <material name="gray">
+          <color rgba=".2 .2 .2 1"/>
+        </material>
+      </visual>
+  </link>
+    <joint name="joint_fixed_0" type="fixed">
+        <origin xyz="0 0 0" rpy="0 0 3.1415296"/>
+        <parent link="base_link"/>
+        <child link="link_1"/>
+        <axis xyz="0 0 1"/>
+    </joint>
+    <link name="link_1">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://robot_description/meshes/joint.stl"/>
+            </geometry>
+            <material name="white">
+                <color rgba="1 1 1 1"/>
+            </material>
+        </visual>
+    </link>
+    <joint name="joint_0" type="continuous">
+        <origin xyz="0 0 0.107" rpy="0 0 0"/>
+        <parent link="link_1"/>
+        <child link="link_2"/>
+        <axis xyz="0 0 1"/>
+	<limit effort="150.0" lower="-6.2831853" upper="6.2831853" velocity="3.15"/>
+    </joint>
+    <link name="link_2">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://robot_description/meshes/link4.stl"/>
+            </geometry>
+            <material name="gray">
+                <color rgba=".2 .2 .2 1"/>
+            </material>
+        </visual>
+    </link>
+    <joint name="joint_fixed_1" type="fixed">
+        <origin xyz="0.033 0 0.036" rpy="0 1.5707963 0"/>
+        <parent link="link_2"/>
+        <child link="link_3"/>
+        <axis xyz="0 0 1"/>
+    </joint>
+    <link name="link_3">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://robot_description/meshes/joint.stl"/>
+            </geometry>
+            <material name="white">
+                <color rgba="1 1 1 1"/>
+            </material>
+        </visual>
+    </link>
+    <joint name="joint_1" type="continuous">
+        <origin xyz="0 0 0.107" rpy="0 0 3.1415296"/>
+        <parent link="link_3"/>
+        <child link="link_4"/>
+        <axis xyz="0 0 1"/>
+	<limit effort="150.0" lower="-6.2831853" upper="6.2831853" velocity="3.15"/>
+    </joint>
+    <link name="link_4">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://robot_description/meshes/link1.stl"/>
+            </geometry>
+            <material name="gray">
+                <color rgba=".2 .2 .2 1"/>
+            </material>
+        </visual>
+    </link>
+    <joint name="joint_fixed_2" type="fixed">
+        <origin xyz="0 0.2 0" rpy="3.1415296 0 0"/>
+        <parent link="link_4"/>
+        <child link="link_5"/>
+        <axis xyz="0 0 1"/>
+    </joint>
+    <link name="link_5">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://robot_description/meshes/joint.stl"/>
+            </geometry>
+            <material name="white">
+                <color rgba="1 1 1 1"/>
+            </material>
+        </visual>
+    </link>
+    <joint name="joint_2" type="continuous">
+        <origin xyz="0 0 0.107" rpy="0 0 3.1415296"/>
+        <parent link="link_5"/>
+        <child link="link_6"/>
+        <axis xyz="0 0 1"/>
+	<limit effort="150.0" lower="-6.2831853" upper="6.2831853" velocity="3.15"/>
+    </joint>
+    <link name="link_6">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://robot_description/meshes/link2.stl"/>
+            </geometry>
+            <material name="gray">
+                <color rgba=".2 .2 .2 1"/>
+            </material>
+        </visual>
+    </link>
+    <joint name="joint_fixed_3" type="fixed">
+        <origin xyz="0 0.15 0" rpy="0 3.1415296 0"/>
+        <parent link="link_6"/>
+        <child link="link_7"/>
+        <axis xyz="0 0 1"/>
+    </joint>
+    <link name="link_7">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://robot_description/meshes/joint.stl"/>
+            </geometry>
+            <material name="white">
+                <color rgba="1 1 1 1"/>
+            </material>
+        </visual>
+    </link>
+    <joint name="joint_3" type="continuous">
+        <origin xyz="0 0 0.107" rpy="0 0 0"/>
+        <parent link="link_7"/>
+        <child link="link_8"/>
+        <axis xyz="0 0 1"/>
+	<limit effort="150.0" lower="-6.2831853" upper="6.2831853" velocity="3.15"/>
+    </joint>
+    <link name="link_8">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://robot_description/meshes/link4.stl"/>
+            </geometry>
+            <material name="gray">
+                <color rgba=".2 .2 .2 1"/>
+            </material>
+        </visual>
+    </link>
+    <joint name="joint_fixed_4" type="fixed">
+        <origin xyz="0.033 0 0.036" rpy="0 1.5707963 0"/>
+        <parent link="link_8"/>
+        <child link="link_9"/>
+        <axis xyz="0 0 1"/>
+    </joint>
+    <link name="link_9">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://robot_description/meshes/joint.stl"/>
+            </geometry>
+            <material name="white">
+                <color rgba="1 1 1 1"/>
+            </material>
+        </visual>
+    </link>
+    <joint name="joint_4" type="continuous">
+        <origin xyz="0 0 0.107" rpy="0 0 0"/>
+        <parent link="link_9"/>
+        <child link="link_10"/>
+        <axis xyz="0 0 1"/>
+	<limit effort="150.0" lower="-6.2831853" upper="6.2831853" velocity="3.15"/>
+    </joint>
+    <link name="link_10">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://robot_description/meshes/link4.stl"/>
+            </geometry>
+            <material name="gray">
+                <color rgba=".2 .2 .2 1"/>
+            </material>
+        </visual>
+    </link>
+    <joint name="joint_fixed_5" type="fixed">
+        <origin xyz="0.033 0 0.036" rpy="0 1.5707963 0"/>
+        <parent link="link_10"/>
+        <child link="link_11"/>
+        <axis xyz="0 0 1"/>
+    </joint>
+    <link name="link_11">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://robot_description/meshes/joint.stl"/>
+            </geometry>
+            <material name="white">
+                <color rgba="1 1 1 1"/>
+            </material>
+        </visual>
+    </link>
+    <joint name="joint_5" type="continuous">
+        <origin xyz="0 0 0.107" rpy="0 0 0"/>
+        <parent link="link_11"/>
+        <child link="ee_link"/>
+        <axis xyz="0 0 1"/>
+	<limit effort="150.0" lower="-6.2831853" upper="6.2831853" velocity="3.15"/>
+    </joint>
+    <link name="ee_link"/>
+</robot>

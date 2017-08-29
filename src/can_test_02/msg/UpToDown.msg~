@@ -1,0 +1,7 @@
+int64[] ID
+float64[] POSITION
+float64[] SPEED
+float64[] CURRENT
+float64 MODE
+
+

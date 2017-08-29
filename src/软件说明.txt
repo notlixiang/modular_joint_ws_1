@@ -1,0 +1,64 @@
+﻿sudo apt-get install ros-indigo-qt-ros 
+sudo apt-get install ros-indigo-moveit-full
+
+1.can_test_02程序包
+	功能：CAN通讯的PC端程序
+	运行：
+		sudo su
+		rosrun can_test_02 driver
+	操作：
+		1.CMakeList.txt文件中/home/smj/ros/software_package/ws_ythgj/src/libcontrolcan.so路径需要修改为当前电脑中的路径
+		2.driver.cpp文件中的#define SOFILE "/home/smj/ros/software_package/ws_ythgj/src/libcontrolcan.so" /* 指定动态链接库名称 */		
+			和前面一样需要修改为当前电脑的路径
+
+2.hardWare_setting程序包
+	功能：关节ID和PID参数配置
+	运行：
+		运行can_test_02
+		rosrun hardWare_setting hardWare_setting
+	操作：
+		当移植到其他电脑时需要修改main_window.cpp里面QFile f("/home/sun/ros/software_package/ws_software_2_4/src/ID_List.txt");的路径
+		这一路径即保存生成ID_List.txt文件的路径	
+	输出：	程序运行结束点击Save_ID,生成ID_List.txt文件，无序保存着所连接关节的CAN ID和固定ID
+        ID_List.txt形式为：      
+				CAN_ID     //某一个关节A
+				Fixed_ID   //某一个关节A
+				CAN_ID     //某一个关节B
+				Fixed_ID   //某一个关节B
+				。。。。。。
+				这里的排列是无序的，也就是说这个文件只是单纯记录有几个关节ID和他们的值		             
+
+3.Creat_URDF程序包
+	功能：自动生成一体化关节的URDF，程序运行开始会读取ID_List.txt文件，然后让用户配置关节ID顺序，连杆类型等
+        输出： 
+		1.生成名为robot.urdf的URDF文件
+		2.生成ID.txt文件，该文件顺序保存着ID的排列顺序，供后面的ros驱动读取使用
+
+4.ros_driver程序包
+	功能：
+		1.发布关节值用于仿真
+		2.提供速度控制接口 /ur_driver/joint_speed,向这个话题发布速度控制指令和数据
+		3.提供位置控制接口 /follow_joint_trajectory/goal，兼容MoveIt，即能接收MoveIt的规划结果
+	运行：
+		rosrun ros_driver ros_driver
+	操作：
+		1.当移植到其他电脑时需要修改main.cpp里面的QFile f("/home/smj/ros/software_package/ws_software_2_4/src/ID.txt");路径
+		  这一路径即驱动程序读取ID.txt文件的路径，这一路径应该与上一个程序包最后生成的ID.txt文件一样。
+
+5.robot_description程序包
+	功能：URDF仿真文件运行的程序包
+	运行：  以下列出的两条指令只要运行一个就行
+		roslaunch robot_description test.launch      //自动生成URDF后，想看看效果，运行这条指令
+		roslaunch robot_description robot.launch     //真正连接了机器人后，运行这条指令		
+
+6.robot_msgs程序包（无需任何操作）
+	功能：程序中所有的自定义消息程序包
+
+7.GUI_Control程序包
+	功能：一个小的Demo，可以最多支持六个关节的简单控制，显示末端位姿，显示传感器数据
+	运行：
+		rosrun GUI_Control GUI_Control
+	操作：
+		1.当移植到其他电脑时需要修改main_window.cpp里面的QFile f("/home/smj/ros/software_package/ws_software_2_4/src/ID.txt");路径
+		  这一路径即ID.txt文件的路径。
+

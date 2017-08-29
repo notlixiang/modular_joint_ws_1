@@ -1,0 +1,324 @@
+#include "ros/ros.h"
+#include "std_msgs/String.h"
+
+#include <sstream>
+
+#include <stdio.h> 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <pthread.h>
+
+#include <actionlib/server/simple_action_server.h>
+#include <control_msgs/FollowJointTrajectoryAction.h>
+#include <iostream>
+#include <vector>
+
+#include <beginner_tutorials/recv.h>
+#include <beginner_tutorials/orig.h>
+
+#include "lib_can/controlcan.h"/* 包含CAN通讯硬件操作函数头文件 */
+
+#include "dlfcn.h" /* 包含动态链接功能接口文件 */
+
+#define SOFILE "/home/jerry/controlcan/64bit/libcontrolcan.so" /* 指定动态链接库名称 */
+
+/**
+ * This tutorial demonstrates simple sending of messages over the ROS system.
+ */
+
+using namespace std;
+
+
+void chatterCallback(const std_msgs::String::ConstPtr& msg)
+{
+  ROS_INFO("I heard: [%s]", msg->data.c_str());
+
+}
+
+
+std::vector<trajectory_msgs::JointTrajectoryPoint> points;
+
+class FollowJointTrajectoryAction
+{
+protected:
+  ros::NodeHandle nh_;     
+  actionlib::SimpleActionServer<control_msgs::FollowJointTrajectoryAction> as_;
+
+  std::string action_name_;
+  control_msgs::FollowJointTrajectoryResult result_;
+
+public:
+  FollowJointTrajectoryAction(std::string name):
+    as_(nh_,name,boost::bind(&FollowJointTrajectoryAction::executeCB, this, _1), false),
+    action_name_(name)
+  {
+    as_.start();
+  }
+
+  ~FollowJointTrajectoryAction(void)
+  {}
+
+  void executeCB(const control_msgs::FollowJointTrajectoryGoalConstPtr &goal)
+  {
+    points = goal->trajectory.points;
+
+    std::cout<<"计算出的关节值："<<std::endl;
+    for(int i=0;i<points.size();i++)
+    {
+      for(int j=0;j<6;j++)
+      {
+        std::cout<<points[i].positions[j]<<"  ";
+      }
+      std::cout<<std::endl;
+    }
+    std::cout<<"轨迹总共"<<points.size()<<"个点"<<std::endl;
+    std::cout<<std::endl;
+
+    std::cout<<"计算出的各关节速度值："<<std::endl;
+    for(int i=0;i<points.size();i++)
+    {
+      for(int j=0;j<6;j++)
+      {
+        std::cout<<points[i].velocities[j]<<"  ";
+      }
+      std::cout<<std::endl;
+    }
+    std::cout<<std::endl;
+    
+    std::cout<<"计算出的各关节加速度值："<<std::endl;
+    for(int i=0;i<points.size();i++)
+    {
+      for(int j=0;j<6;j++)
+      {
+        std::cout<<points[i].accelerations[j]<<"  ";
+      }
+      std::cout<<std::endl;
+    }
+
+    as_.setSucceeded(result_);
+  }
+};
+
+
+
+
+int main(int argc, char **argv)
+{
+void *handle;
+char *error;  
+handle = dlopen (SOFILE, RTLD_LAZY);
+if (!handle) {  
+        fprintf (stderr, "%s\n", dlerror());  
+        exit(1);  
+    }
+printf("\nsuccess: load .so file \n");
+
+typedef DWORD (*fVCI_OpenDevice)(DWORD DeviceType,DWORD DeviceInd,DWORD Reserved);
+fVCI_OpenDevice VCI_OpenDevice = NULL;
+VCI_OpenDevice = (fVCI_OpenDevice)dlsym(handle, "VCI_OpenDevice"); 
+
+typedef ULONG (*fVCI_Receive)(DWORD DeviceType,DWORD DeviceInd,DWORD CANInd,PVCI_CAN_OBJ pReceive,UINT Len,INT WaitTime);
+fVCI_Receive VCI_Receive =NULL;
+VCI_Receive=(fVCI_Receive)dlsym(handle, "VCI_Receive"); 
+
+typedef DWORD (*fVCI_InitCAN)(DWORD DeviceType, DWORD DeviceInd, DWORD CANInd, PVCI_INIT_CONFIG pInitConfig);
+fVCI_InitCAN VCI_InitCAN =NULL;
+VCI_InitCAN=(fVCI_InitCAN)dlsym(handle, "VCI_InitCAN"); 
+
+typedef DWORD (*fVCI_StartCAN)(DWORD DeviceType,DWORD DeviceInd,DWORD CANInd);
+fVCI_StartCAN VCI_StartCAN =NULL;
+VCI_StartCAN=(fVCI_StartCAN)dlsym(handle, "VCI_StartCAN"); 
+
+typedef DWORD (*fVCI_CloseDevice)(DWORD DeviceType,DWORD DeviceInd);
+fVCI_CloseDevice VCI_CloseDevice =NULL;
+VCI_CloseDevice=(fVCI_CloseDevice)dlsym(handle, "VCI_CloseDevice"); 
+
+
+
+if ((error = dlerror()) != NULL)  {  
+        fprintf (stderr, "%s\n", error); 
+        exit(1);  
+    } /**/
+
+printf("success: load functions \n");
+
+if(VCI_OpenDevice(VCI_USBCAN2,0,0)!=1)
+	{
+		printf("open deivce error\n");
+		exit(1);
+    }/**/
+
+
+	VCI_INIT_CONFIG config;
+	config.AccCode=0;
+	config.AccMask=0xffffffff;
+	config.Filter=1;
+	config.Mode=0;
+
+	/*500 Kbps  0x00  0x1C*/	
+	config.Timing0=0x00;
+	config.Timing1=0x1C;
+	
+	if(VCI_InitCAN(VCI_USBCAN2,0,0,&config)!=1)
+	{
+		printf("init CAN error\n");
+		VCI_CloseDevice(VCI_USBCAN2,0);
+		exit(1);
+	}
+
+	if(VCI_StartCAN(VCI_USBCAN2,0,0)!=1)
+	{
+		printf("Start CAN error\n");
+		VCI_CloseDevice(VCI_USBCAN2,0);
+		exit(1);
+	}
+  /**
+   * The ros::init() function needs to see argc and argv so that it can perform
+   * any ROS arguments and name remapping that were provided at the command line.
+   * For programmatic remappings you can use a different version of init() which takes
+   * remappings directly, but for most command-line programs, passing argc and argv is
+   * the easiest way to do it.  The third argument to init() is the name of the node.
+   *
+   * You must call one of the versions of ros::init() before using any other
+   * part of the ROS system.
+   */
+  ros::init(argc, argv, "talker");
+
+  /**
+   * NodeHandle is the main access point to communications with the ROS system.
+   * The first NodeHandle constructed will fully initialize this node, and the last
+   * NodeHandle destructed will close down the node.
+   */
+  ros::NodeHandle n;
+
+  /**
+   * The advertise() function is how you tell ROS that you want to
+   * publish on a given topic name. This invokes a call to the ROS
+   * master node, which keeps a registry of who is publishing and who
+   * is subscribing. After this advertise() call is made, the master
+   * node will notify anyone who is trying to subscribe to this topic name,
+   * and they will in turn negotiate a peer-to-peer connection with this
+   * node.  advertise() returns a Publisher object which allows you to
+   * publish messages on that topic through a call to publish().  Once
+   * all copies of the returned Publisher object are destroyed, the topic
+   * will be automatically unadvertised.
+   *
+   * The second parameter to advertise() is the size of the message queue
+   * used for publishing messages.  If messages are published more quickly
+   * than we can send them, the number here specifies how many messages to
+   * buffer up before throwing some away.
+   */
+  //ros::Publisher chatter_pub = n.advertise<std_msgs::String>("Comm_Recv", 1000);
+
+
+FollowJointTrajectoryAction followJointTrajectory("follow_joint_trajectory");//moveit
+
+  ros::Publisher chatter_pub = n.advertise<ensor_msgs::JointState>("joint_states", 1000);
+  //ros::Publisher chatter_pub = n.advertise<beginner_tutorials::orig>("Comm_Orig", 1000);
+  //ros::Publisher comm_recv_pub = n.advertise<beginner_tutorials::recv>("Comm_Recv", 1000);
+  ros::Subscriber sub = n.subscribe("Comm_Send", 1000, chatterCallback);
+  ros::Rate loop_rate(100);
+
+  /**
+   * A count of how many messages we have sent. This is used to create
+   * a unique string for each message.
+   */
+  int count = 0;
+
+
+
+	int reclen=0;
+	VCI_CAN_OBJ rec[100];
+	int i;
+	int ind=0;
+	//int *run=(int*)param;
+	
+	
+	while(ros::ok())
+	{	
+		
+		//printf("running....%d\n",ind);
+		if((reclen=VCI_Receive(VCI_USBCAN2,0,ind,rec,2500,0))>0)
+		{
+			
+			/*printf("IND:%d Receive: %08X", ind, rec[reclen-1].ID);
+			for(i = 0; i < rec[reclen-1].DataLen; i++)
+			{
+				printf(" %02X", rec[reclen-1].Data[i]);
+			}
+			printf("\n");*/
+
+			printf("count: %d\n",count);
+
+			std_msgs::String msg;
+			//std::stringstream ss;
+			beginner_tutorials::orig OrigComm;
+   		 //ss << "hello world " << count;
+
+			//ss <<"IND:"<<ind<<"  ReceiveID:"<<setw(2)<<rec[reclen-1].ID<<"  ";
+			OrigComm.ID=rec[reclen-1].ID;
+			for(i = 0; i < rec[reclen-1].DataLen; i++)
+			{
+				//ss <<setw(2)<<hex<<(int)rec[reclen-1].Data[i]<<" ";
+				OrigComm.DATA[i]=(int)rec[reclen-1].Data[i];
+			}/**/
+			//ss <<"\n";
+			//msg.data = ss.str();
+    			//ROS_INFO("%s", msg.data.c_str());
+    			chatter_pub.publish(OrigComm);
+
+
+
+
+
+
+
+
+    			ros::spinOnce();
+
+    			loop_rate.sleep();
+			++count;
+/**/
+		}	
+//printf("reclen=%d\n",reclen);
+	}
+
+
+  /*while (ros::ok())
+  {
+    /**
+     * This is a message object. You stuff it with data, and then publish it.
+     
+    std_msgs::String msg;
+
+    std::stringstream ss;
+    ss << "hello world " << count;
+    msg.data = ss.str();
+
+    ROS_INFO("%s", msg.data.c_str());*/
+
+    /**
+     * The publish() function is how you send messages. The parameter
+     * is the message object. The type of this object must agree with the type
+     * given as a template parameter to the advertise<>() call, as was done
+     * in the constructor above.
+     
+    chatter_pub.publish(msg);
+
+    ros::spinOnce();
+
+    loop_rate.sleep();
+    ++count;
+  }**/
+
+	
+VCI_CloseDevice(VCI_USBCAN2,0);
+  return 0;
+}
+
+
+
+
+
+

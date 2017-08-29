@@ -1,0 +1,314 @@
+#include <QtGui>
+#include <QMessageBox>
+#include <iostream>
+#include "../include/GUI_Control/main_window.hpp"
+float max_speed = 1;
+std::vector<float> joint_speed;
+std::vector<float> joint_value_listen;
+std::vector<bool>  key_speed_control_left;
+std::vector<bool>  key_speed_control_right;
+std::vector<int>   ID;
+std::vector<float> CURRENT;
+std::vector<float> TEMPERATURE;
+
+int num_of_joints;
+
+
+Widget::Widget(int argc, char** argv, QWidget *parent): QWidget(parent),
+    joint_listen_node(argc, argv) ,
+    speed_control_qnode(argc,argv)
+{
+    QFile f("/home/null/ws_ythgj_1/src/ID.txt");
+    if(!f.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        ROS_ERROR("Can not read ID.txt!");
+    }
+
+    QTextStream txtInput(&f);
+    QString lineStr;
+    while(!txtInput.atEnd())
+    {
+        lineStr = txtInput.readLine();
+        ID.push_back(lineStr.toInt());
+    }
+    f.close();
+
+    num_of_joints = ID.size();
+    CURRENT.resize(num_of_joints);
+    TEMPERATURE.resize(num_of_joints);
+
+    QPixmap green_image,red_image;
+    green_image.load("/home/smj/ros/new_yth/ws_yth_1/src/GUI/GUI_Control/resources/images/green.png");
+    red_image.load("/home/smj/ros/new_yth/ws_yth_1/src/GUI/GUI_Control/resources/images/red.png");
+
+    joint_speed.resize(num_of_joints);
+    key_speed_control_left.resize(num_of_joints);
+    key_speed_control_right.resize(num_of_joints);
+    for(int i=0; i<num_of_joints; i++)
+    {
+        joint_speed[i] = 0.3 * max_speed;
+        key_speed_control_left[i] = false;
+        key_speed_control_right[i] = false;
+    }
+    joint_value_listen.resize(num_of_joints);
+
+    tree_joints.resize(num_of_joints);
+    joints_current.resize(num_of_joints);
+    joints_T.resize(num_of_joints);
+    pic_label.resize(num_of_joints);
+    joint_name_label.resize(num_of_joints);
+    button_left.resize(num_of_joints);
+    button_right.resize(num_of_joints);
+    speed_label.resize(num_of_joints);
+    speed_slider.resize(num_of_joints);
+    lineEdit.resize(num_of_joints);
+    tempture_label.resize(num_of_joints);
+    current_label.resize(num_of_joints);
+    tempture_lineEdit.resize(num_of_joints);
+    current_lineEdit.resize(num_of_joints);
+    zhan_wei_v.resize(num_of_joints);
+    middle_1_h_layout.resize(num_of_joints);
+    middle_2_h_layout.resize(num_of_joints);
+    middle_3_h_layout.resize(num_of_joints);
+
+    tree = new QTreeWidget;
+    tree->setColumnCount(2);
+    QStringList headers;
+    headers << QObject::tr("Joints") <<QObject::tr("States");
+    tree->setHeaderLabels(headers);
+
+    for(int i=0; i<num_of_joints; i++)
+    {
+        QString str;
+
+        tree_joints[i] = new QTreeWidgetItem(QStringList("Joint_"+str.setNum(i)));
+        joints_T[i] = new QTreeWidgetItem(QStringList("temperature_"+str.setNum(i)));
+        joints_current[i] = new QTreeWidgetItem(QStringList("current_"+str.setNum(i)));
+
+        tree->addTopLevelItem(tree_joints[i]);
+        tree_joints[i]->addChild(joints_current[i]);
+        tree_joints[i]->addChild(joints_T[i]);
+
+        tree->setCurrentItem(tree_joints[i]);
+        tree->currentItem()->setText(1,"Connected");
+        tree->setCurrentItem(joints_T[i]);
+        tree->currentItem()->setText(1,"40");
+        tree->setCurrentItem(joints_current[i]);
+        tree->currentItem()->setText(1,"0.5");
+
+        pic_label[i] = new QLabel();
+        pic_label[i]->clear();
+        pic_label[i]->setPixmap(green_image);
+        joint_name_label[i] = new QLabel("Joint_"+str.setNum(i));
+        button_left[i] = new QPushButton("<--");
+        button_left[i]->setObjectName("l_bt_"+str.setNum(i));
+        button_left[i]->setAutoRepeat(true);
+        button_left[i]->setAutoRepeatDelay(10);
+        button_left[i]->setAutoRepeatInterval(10);
+        button_right[i] = new QPushButton("-->");
+        button_right[i]->setObjectName("r_bt_"+str.setNum(i));
+        button_right[i]->setAutoRepeat(true);
+        button_right[i]->setAutoRepeatDelay(10);
+        button_right[i]->setAutoRepeatInterval(10);
+        lineEdit[i] = new QLineEdit();
+        QObject::connect(button_left[i], SIGNAL(clicked()), this, SLOT(handle_speed_control_btn()));
+        QObject::connect(button_right[i], SIGNAL(clicked()), this, SLOT(handle_speed_control_btn()));
+
+        speed_label[i] = new QLabel("Joint_"+str.setNum(i)+" Speed");
+        speed_slider[i] = new QSlider(Qt::Horizontal);
+        speed_slider[i]->setObjectName("slider_"+str.setNum(i));
+        speed_slider[i]->setMinimum(0);
+        speed_slider[i]->setMaximum(100);
+        speed_slider[i]->setValue(30);
+        QObject::connect(speed_slider[i], SIGNAL(valueChanged(int)), this, SLOT(sliderValueChanged(int)));
+
+        tempture_label[i] = new QLabel("Joint_"+str.setNum(i)+" Temperature");
+        tempture_lineEdit[i] = new QLineEdit();
+        current_label[i] = new QLabel("Joint_"+str.setNum(i)+" Current");
+        current_lineEdit[i] = new QLineEdit();
+        zhan_wei_v[i] = new QLabel();
+
+        middle_1_h_layout[i] = new QHBoxLayout;
+        middle_2_h_layout[i] = new QHBoxLayout;
+        middle_3_h_layout[i] = new QHBoxLayout;
+        middle_1_h_layout[i]->addWidget(joint_name_label[i]);
+        middle_1_h_layout[i]->addWidget(pic_label[i]);
+        middle_1_h_layout[i]->addWidget(button_left[i]);
+        middle_1_h_layout[i]->addWidget(button_right[i]);
+        middle_1_h_layout[i]->addWidget(lineEdit[i]);
+        middle_1_h_layout[i]->addStretch();
+        middle_1_h_layout[i]->addStretch();
+        middle_2_h_layout[i]->addWidget(speed_label[i]);
+        middle_2_h_layout[i]->addWidget(speed_slider[i]);
+        middle_3_h_layout[i]->addWidget(tempture_label[i]);
+        middle_3_h_layout[i]->addWidget(tempture_lineEdit[i]);
+        middle_3_h_layout[i]->addStretch();
+        middle_3_h_layout[i]->addWidget(current_label[i]);
+        middle_3_h_layout[i]->addWidget(current_lineEdit[i]);
+        middle_3_h_layout[i]->addStretch();
+    }
+
+    QHBoxLayout *leftLayout = new QHBoxLayout;
+    leftLayout->addWidget(tree);
+    tree->expandAll();
+
+    QVBoxLayout *middle_v_layout = new QVBoxLayout;
+    for(int i=0; i<num_of_joints; i++)
+    {
+        middle_v_layout->addLayout(middle_1_h_layout[i]);
+        middle_v_layout->addLayout(middle_2_h_layout[i]);
+        middle_v_layout->addLayout(middle_3_h_layout[i]);
+        middle_v_layout->addWidget(zhan_wei_v[i]);
+    }
+
+    position_label[0] = new QLabel("POS_X");
+    position_lineEdit[0] = new QLineEdit();
+    position_label[1] = new QLabel("POS_Y");
+    position_lineEdit[1] = new QLineEdit();
+    position_label[2] = new QLabel("POS_Z");
+    position_lineEdit[2] = new QLineEdit();
+    position_label[3] = new QLabel("RPY_R");
+    position_lineEdit[3] = new QLineEdit();
+    position_label[4] = new QLabel("RPY_P");
+    position_lineEdit[4] = new QLineEdit();
+    position_label[5] = new QLabel("RPY_Y");
+    position_lineEdit[5] = new QLineEdit();
+
+    for(int i=0; i<10; i++)
+    {
+        right_H_layout[i] = new QHBoxLayout;
+    }
+
+    right_H_layout[0]->addWidget(position_label[0]);
+    right_H_layout[0]->addWidget(position_lineEdit[0]);
+    right_H_layout[1]->addWidget(position_label[1]);
+    right_H_layout[1]->addWidget(position_lineEdit[1]);
+    right_H_layout[2]->addWidget(position_label[2]);
+    right_H_layout[2]->addWidget(position_lineEdit[2]);
+    right_H_layout[3]->addWidget(position_label[3]);
+    right_H_layout[3]->addWidget(position_lineEdit[3]);
+    right_H_layout[4]->addWidget(position_label[4]);
+    right_H_layout[4]->addWidget(position_lineEdit[4]);
+    right_H_layout[5]->addWidget(position_label[5]);
+    right_H_layout[5]->addWidget(position_lineEdit[5]);
+
+    Cartesian_button[0] = new QPushButton("Forward");
+    Cartesian_button[1] = new QPushButton("Left");
+    Cartesian_button[2] = new QPushButton("Right");
+    Cartesian_button[3] = new QPushButton("Back");
+    Cartesian_button[4] = new QPushButton("Up");
+    Cartesian_button[5] = new QPushButton("Down");
+
+    right_H_layout[6]->addStretch();
+    right_H_layout[6]->addWidget(Cartesian_button[0]);
+    right_H_layout[6]->addStretch();
+    right_H_layout[7]->addWidget(Cartesian_button[1]);
+    right_H_layout[7]->addStretch();
+    right_H_layout[7]->addWidget(Cartesian_button[2]);
+    right_H_layout[8]->addStretch();
+    right_H_layout[8]->addWidget(Cartesian_button[3]);
+    right_H_layout[8]->addStretch();
+    right_H_layout[9]->addWidget(Cartesian_button[4]);
+    right_H_layout[9]->addStretch();
+    right_H_layout[9]->addWidget(Cartesian_button[5]);
+
+    QVBoxLayout *right_v_layout = new QVBoxLayout;
+    for(int i=0; i<10; i++)
+        right_v_layout->addLayout(right_H_layout[i]);
+
+    QHBoxLayout *zhankong1 = new QHBoxLayout;
+    QLabel *zhankong_label1 = new QLabel;
+    zhankong1->addWidget(zhankong_label1);
+
+    QHBoxLayout *zhankong2 = new QHBoxLayout;
+    QLabel *zhankong_label2 = new QLabel;
+    zhankong2->addWidget(zhankong_label2);
+
+    QHBoxLayout *mainLaout = new QHBoxLayout;
+    mainLaout->addLayout(leftLayout);
+    mainLaout->setStretchFactor(leftLayout,5);
+    mainLaout->addLayout(zhankong1);
+    mainLaout->setStretchFactor(zhankong1,1);
+    mainLaout->addLayout(middle_v_layout);
+    mainLaout->setStretchFactor(middle_v_layout,8);
+    mainLaout->addLayout(zhankong2);
+    mainLaout->setStretchFactor(zhankong2,1);
+    mainLaout->addLayout(right_v_layout);
+    mainLaout->setStretchFactor(right_v_layout,3);
+
+    this->setLayout(mainLaout);
+
+    QObject::connect(&speed_control_qnode, SIGNAL(rosShutdown()), this, SLOT(close()));
+
+    Timer1 = new QTimer(this);
+    QObject::connect(Timer1,SIGNAL(timeout()), this, SLOT(sensorData_update()) );
+    Timer1->start(5);
+
+    Timer2 = new QTimer(this);
+    QObject::connect(Timer2,SIGNAL(timeout()), this, SLOT(clear_true()) );
+    Timer2->start(15);
+
+    speed_control_qnode.init();
+    joint_listen_node.init();
+}
+
+Widget::~Widget() {}
+
+void Widget::handle_speed_control_btn()
+{
+    QPushButton* btn = qobject_cast<QPushButton*>(sender());
+    QString str;
+    for(int i=0; i<num_of_joints; i++)
+    {
+        if (("l_bt_"+str.setNum(i)) == btn->objectName())
+        {
+            //QMessageBox::information(this,"notice","l_bt_"+str.setNum(i));
+            key_speed_control_left[i] = true;
+            break;
+        }
+        else if (("r_bt_"+str.setNum(i)) == btn->objectName())
+        {
+            //QMessageBox::information(this,"notice","r_bt_"+str.setNum(i));
+            key_speed_control_right[i] = true;
+            break;
+        }
+    }
+}
+
+void Widget::sensorData_update()
+{
+    QString str;
+    for(int i=0; i<num_of_joints; i++)
+    {
+        lineEdit[i]->setText(str.setNum(joint_value_listen[i]));
+    }
+}
+
+void Widget::sliderValueChanged(int value)
+{
+    QSlider* slider = qobject_cast<QSlider*>(sender());
+    QString str;
+    for(int i=0; i<num_of_joints; i++)
+    {
+        if (("slider_"+str.setNum(i)) == slider->objectName())
+        {
+            joint_speed[i] = max_speed*((float)speed_slider[i]->value()/100);
+            break;
+        }
+    }
+}
+
+void Widget::clear_true()
+{
+    for(int i=0; i<num_of_joints; i++)
+    {
+        if(!(button_left[i]->isDown()))
+        {
+            key_speed_control_left[i] = false;
+        }
+        if(!(button_right[i]->isDown()))
+        {
+            key_speed_control_right[i] = false;
+        }
+    }
+}

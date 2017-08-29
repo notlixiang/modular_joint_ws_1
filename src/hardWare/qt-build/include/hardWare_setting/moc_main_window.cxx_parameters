@@ -1,0 +1,14 @@
+-I/opt/ros/indigo/include
+-I/usr/include
+-I/usr/include/qt4
+-I/usr/include/qt4/QtGui
+-I/usr/include/qt4/QtCore
+-I/home/smj/ros/ws_ythgj/src/hardWare/qt-build
+-DROS_PACKAGE_NAME="hardWare_setting"
+-DROSCONSOLE_BACKEND_LOG4CXX
+-DQT_GUI_LIB
+-DQT_CORE_LIB
+-DQT_NO_KEYWORDS
+-o
+/home/smj/ros/ws_ythgj/src/hardWare/qt-build/include/hardWare_setting/moc_main_window.cxx
+/home/smj/ros/ws_ythgj/src/hardWare/hardWare_setting/include/hardWare_setting/main_window.hpp

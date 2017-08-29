@@ -1,0 +1,8 @@
+prefix=/home/smj/ros/new_yth/ws_yth_1/src/GUI/Qt-build/devel
+
+Name: GUI_Control
+Description: Description of GUI_Control
+Version: 0.1.0
+Cflags: 
+Libs: -L/home/smj/ros/new_yth/ws_yth_1/src/GUI/Qt-build/devel/lib 
+Requires: 

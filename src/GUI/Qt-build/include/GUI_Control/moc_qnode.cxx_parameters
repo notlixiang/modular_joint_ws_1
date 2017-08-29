@@ -1,0 +1,14 @@
+-I/opt/ros/indigo/include
+-I/usr/include
+-I/usr/include/qt4
+-I/usr/include/qt4/QtGui
+-I/usr/include/qt4/QtCore
+-I/home/smj/ros/new_yth/ws_yth_1/src/GUI/Qt-build
+-DROS_PACKAGE_NAME="GUI_Control"
+-DROSCONSOLE_BACKEND_LOG4CXX
+-DQT_GUI_LIB
+-DQT_CORE_LIB
+-DQT_NO_KEYWORDS
+-o
+/home/smj/ros/new_yth/ws_yth_1/src/GUI/Qt-build/include/GUI_Control/moc_qnode.cxx
+/home/smj/ros/new_yth/ws_yth_1/src/GUI/GUI_Control/include/GUI_Control/qnode.hpp

@@ -1,0 +1,8 @@
+prefix=/usr/local
+
+Name: hardWare_setting
+Description: Description of hardWare_setting
+Version: 0.1.0
+Cflags: 
+Libs: -L/usr/local/lib 
+Requires: 

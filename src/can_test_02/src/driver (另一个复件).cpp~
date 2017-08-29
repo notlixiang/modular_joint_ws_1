@@ -1,0 +1,314 @@
+#include "ros/ros.h"
+#include "std_msgs/String.h"
+
+#include <sstream>
+
+#include <stdio.h> 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <pthread.h>
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <numeric>
+
+#include <can_test_02/recv.h>
+#include <can_test_02/orig.h>
+#include <can_test_02/UpToDown.h>
+#include <can_test_02/DownToUp.h>
+
+#include "lib_can/controlcan.h"/* 包含CAN通讯硬件操作函数头文件 */
+
+#include "dlfcn.h" /* 包含动态链接功能接口文件 */
+
+#define SOFILE "/home/jerry/controlcan/64bit/libcontrolcan.so" /* 指定动态链接库名称 */
+
+/**
+ * This tutorial demonstrates simple sending of messages over the ROS system.
+ */
+
+using namespace std;
+
+//-------------函数声明--------------
+int send_command();
+//-------------函数声明--------------
+
+//-------------校验位声明--------------
+int control_front[2]={0x00,0x11};//控制帧前校验位
+int control_back[1]={0x33};//控制帧后校验位
+
+int position_velocity_front[3]={0x63,0x23,0x52};//运动状态帧前校验位
+int position_velocity_back[1]={0x40};//运动状态帧后校验位
+
+int temperature_current_front[3]={0x33,0x22,0x11};//温度电流帧前校验位
+int temperature_current_back[1]={0x02};//监视帧后校验位
+
+int acceleration_front[1]={0x32};//加速度帧前校验位
+int acceleration_back[1]={0x11};//加速度帧后校验位
+
+int angular_velocity_front[1]={0x73};//角速度帧前校验位
+int angular_velocity_back[1]={0x82};//角速度帧后校验位
+
+int rpy_angle_front[1]={0x93};//姿态角帧前校验位
+int rpy_angle_back[1]={0x29};//姿态角帧后校验位
+
+int joint_type_front[3]={0x37,0x93,0x28};//关节硬件类型帧前校验位
+int joint_type_back[1]={0x42};//关节硬件类型帧后校验位
+
+int joint_ready_front[3]={0x72,0x24,0x35};//关节准备状态帧前校验位
+int joint_ready_back[1]={0x19};//关节准备状态帧后校验位
+//-------------校验位声明--------------
+
+
+struct CommandFrame
+{
+	vector<long>ID;
+	vector<double>POSITION;
+	vector<double>SPEED;
+	double TIME;
+	vector<double>TIMES;
+};
+
+vector <CommandFrame> command_received;
+
+vector <double> current_times;
+vector <double> times_received;
+
+bool SortByTime (CommandFrame f1,CommandFrame f2)
+{
+	return (f1.TIME<f2.TIME); 
+} 
+
+double test_position;
+double test_velocity;
+
+//-----------------接收命令并处理---------------------
+class CommandReceiver  
+{
+public:  
+  CommandReceiver()  
+  {  
+    //Topic you want to publish
+    chatter_pub_1 = n.advertise<can_test_02::orig>("Comm_Orig", 1000);  
+    chatter_pub_0 = n.advertise<can_test_02::DownToUp>("down_to_up", 1000);
+    //Topic you want to subscribe  
+    sub = n.subscribe("up_to_down",1000, &CommandReceiver::callback, this);  
+  }  
+  
+  void callback(const can_test_02::UpToDown& MsgUpToDown)  
+  {  
+  if(MsgUpToDown.TIMES.size()!=0)//普通模式
+  {
+    vector<double>TIMES=MsgUpToDown.TIMES;
+	double time=MsgUpToDown.TIME;
+	//vector<double> TIMES(MsgUpToDown.TIMES, MsgUpToDown.TIMES+sizeof(MsgUpToDown.TIMES));
+	sort(TIMES.begin(), TIMES.end());
+	sort(current_times.begin(), current_times.end());
+	sort(times_received.begin(), times_received.end());
+
+	if(TIMES==current_times)//判定时刻表是否更新
+	{
+	//时刻表未更新
+		if(find(current_times.begin(), current_times.end(), time)== current_times.end())
+		{    
+	    	//当前time未收到  		    	
+	    	times_received.push_back(time);//加入当前time
+	    	
+	    	//加入当前命令
+	    	CommandFrame temp;
+	    	temp.ID=MsgUpToDown.ID;
+	    	temp.POSITION=MsgUpToDown.POSITION;
+			temp.SPEED=MsgUpToDown.SPEED;
+			temp.TIME=MsgUpToDown.TIME;
+			temp.TIMES=MsgUpToDown.TIMES;
+	    	command_received.push_back(temp);
+		}
+		sort(times_received.begin(), times_received.end());
+		sort(command_received.begin(), command_received.end(),SortByTime);
+		if(TIMES==times_received)
+		{
+			//数据接收完毕,准备发送
+			can_test_02::DownToUp MsgDownToUp;
+			MsgDownToUp.ID=-1;
+			MsgDownToUp.TYPE="COMMAND_RECEIVE_COMPLETE";
+			MsgDownToUp.DATA=accumulate(TIMES.begin(),TIMES.end(),0);
+			chatter_pub_0.publish(MsgDownToUp);//发送确认收到的MSG
+			
+			test_position=command_received.end().POSITION.end();						
+			//send_command();//使用CAN总线发送命令
+			
+		}
+	}
+	else
+	{
+	//时刻表已更新
+	}
+	}
+	else//单关节控制模式
+	{
+	
+	}	
+  
+ }  
+
+private:  
+  ros::NodeHandle n;   
+  ros::Publisher chatter_pub_1;  
+  ros::Publisher chatter_pub_0; 
+  ros::Subscriber sub;  
+  
+};
+//-----------------接收命令并处理---------------------
+
+
+
+
+
+//-----------------MAIN---------------------
+int main(int argc, char **argv)
+{
+//从.so中加载CAN通讯控制函数
+
+  /**
+   * The ros::init() function needs to see argc and argv so that it can perform
+   * any ROS arguments and name remapping that were provided at the command line.
+   * For programmatic remappings you can use a different version of init() which takes
+   * remappings directly, but for most command-line programs, passing argc and argv is
+   * the easiest way to do it.  The third argument to init() is the name of the node.
+   *
+   * You must call one of the versions of ros::init() before using any other
+   * part of the ROS system.
+   */
+  ros::init(argc, argv, "talker");
+
+  /**
+   * NodeHandle is the main access point to communications with the ROS system.
+   * The first NodeHandle constructed will fully initialize this node, and the last
+   * NodeHandle destructed will close down the node.
+   */
+  ros::NodeHandle n;
+
+  /**
+   * The advertise() function is how you tell ROS that you want to
+   * publish on a given topic name. This invokes a call to the ROS
+   * master node, which keeps a registry of who is publishing and who
+   * is subscribing. After this advertise() call is made, the master
+   * node will notify anyone who is trying to subscribe to this topic name,
+   * and they will in turn negotiate a peer-to-peer connection with this
+   * node.  advertise() returns a Publisher object which allows you to
+   * publish messages on that topic through a call to publish().  Once
+   * all copies of the returned Publisher object are destroyed, the topic
+   * will be automatically unadvertised.
+   *
+   * The second parameter to advertise() is the size of the message queue
+   * used for publishing messages.  If messages are published more quickly
+   * than we can send them, the number here specifies how many messages to
+   * buffer up before throwing some away.
+   */
+  //ros::Publisher chatter_pub = n.advertise<std_msgs::String>("Comm_Recv", 1000);
+
+
+//FollowJointTrajectoryAction followJointTrajectory("follow_joint_trajectory");//moveit
+
+  //ros::Publisher chatter_pub_0 = n.advertise<sensor_msgs::JointState>("joint_states", 1000);
+  ros::Publisher chatter_pub_1 = n.advertise<can_test_02::orig>("Comm_Orig", 1000);
+  ros::Publisher chatter_pub_0 = n.advertise<can_test_02::DownToUp>("down_to_up", 1000);
+  
+  CommandReceiver command_receiver;//监视Topic中命令
+  
+  //ros::Publisher comm_recv_pub = n.advertise<beginner_tutorials::recv>("Comm_Recv", 1000);
+  //ros::Subscriber sub = n.subscribe("up_to_down", 1000, chatterCallback);
+  ros::Rate loop_rate(10);
+
+  /**
+   * A count of how many messages we have sent. This is used to create
+   * a unique string for each message.
+   */
+  int count = 0;
+
+	int reclen=0;
+	VCI_CAN_OBJ rec[100];
+	int i;
+	int ind=0;
+	//int *run=(int*)param;
+int framenum;	
+	
+	while(ros::ok())
+	{	
+		
+		
+//------------------判断帧功能类型-----------------------
+if(1)
+{
+//判定为运动状态帧
+can_test_02::DownToUp MsgDownToUp;
+MsgDownToUp.ID=rec[framenum].ID;
+
+MsgDownToUp.TYPE="POSITION";
+MsgDownToUp.DATA=0;
+chatter_pub_0.publish(MsgDownToUp);
+
+MsgDownToUp.TYPE="VELOCITY";
+MsgDownToUp.DATA=0;
+chatter_pub_0.publish(MsgDownToUp);
+
+continue;
+}
+
+
+			//ss <<"\n";
+			//msg.data = ss.str();
+    			//ROS_INFO("%s", msg.data.c_str());
+ /**/
+}
+    			
+}
+
+
+//--------------------ROS循环-----------------
+			ros::spinOnce();
+    		loop_rate.sleep();			
+//printf("reclen=%d\n",reclen);
+	}
+
+
+  /*while (ros::ok())
+  {
+    /**
+     * This is a message object. You stuff it with data, and then publish it.
+     
+    std_msgs::String msg;
+
+    std::stringstream ss;
+    ss << "hello world " << count;
+    msg.data = ss.str();
+
+    ROS_INFO("%s", msg.data.c_str());*/
+
+    /**
+     * The publish() function is how you send messages. The parameter
+     * is the message object. The type of this object must agree with the type
+     * given as a template parameter to the advertise<>() call, as was done
+     * in the constructor above.
+     
+    chatter_pub.publish(msg);
+
+    ros::spinOnce();
+
+    loop_rate.sleep();
+    ++count;
+  }**/
+
+	
+VCI_CloseDevice(VCI_USBCAN2,0);
+dlclose(handle);
+  return 0;
+}
+//-----------------MAIN---------------------
+
+
+
+
+
