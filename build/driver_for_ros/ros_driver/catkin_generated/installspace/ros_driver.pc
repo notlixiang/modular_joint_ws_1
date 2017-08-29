@@ -1,0 +1,8 @@
+prefix=/home/null/ros_ws/modular_joint_ws_1/install
+
+Name: ros_driver
+Description: Description of ros_driver
+Version: 0.1.0
+Cflags: 
+Libs: -L/home/null/ros_ws/modular_joint_ws_1/install/lib 
+Requires: message_runtime

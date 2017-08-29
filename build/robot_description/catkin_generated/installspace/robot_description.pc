@@ -1,0 +1,8 @@
+prefix=/home/null/ros_ws/modular_joint_ws_1/install
+
+Name: robot_description
+Description: Description of robot_description
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/null/ros_ws/modular_joint_ws_1/install/lib 
+Requires: 

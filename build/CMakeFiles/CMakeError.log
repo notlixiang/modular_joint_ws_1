@@ -1,0 +1,149 @@
+Determining if the pthread_create exist failed with the following output:
+Change Dir: /home/null/ros_ws/modular_joint_ws_1/build/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec841558470/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec841558470.dir/build.make CMakeFiles/cmTryCompileExec841558470.dir/build
+make[1]: 正在进入目录 `/home/null/ros_ws/modular_joint_ws_1/build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/null/ros_ws/modular_joint_ws_1/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec841558470.dir/CheckSymbolExists.c.o
+/usr/bin/cc    -o CMakeFiles/cmTryCompileExec841558470.dir/CheckSymbolExists.c.o   -c /home/null/ros_ws/modular_joint_ws_1/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+Linking C executable cmTryCompileExec841558470
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec841558470.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTryCompileExec841558470.dir/CheckSymbolExists.c.o  -o cmTryCompileExec841558470 -rdynamic 
+CMakeFiles/cmTryCompileExec841558470.dir/CheckSymbolExists.c.o：在函数‘main’中：
+CheckSymbolExists.c:(.text+0x16)：对‘pthread_create’未定义的引用
+collect2: error: ld returned 1 exit status
+make[1]:正在离开目录 `/home/null/ros_ws/modular_joint_ws_1/build/CMakeFiles/CMakeTmp'
+make[1]: *** [cmTryCompileExec841558470] 错误 1
+make: *** [cmTryCompileExec841558470/fast] 错误 2
+
+File /home/null/ros_ws/modular_joint_ws_1/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <pthread.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef pthread_create
+  return ((int*)(&pthread_create))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: /home/null/ros_ws/modular_joint_ws_1/build/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec3836635734/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec3836635734.dir/build.make CMakeFiles/cmTryCompileExec3836635734.dir/build
+make[1]: 正在进入目录 `/home/null/ros_ws/modular_joint_ws_1/build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/null/ros_ws/modular_joint_ws_1/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec3836635734.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTryCompileExec3836635734.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-2.8/Modules/CheckFunctionExists.c
+Linking C executable cmTryCompileExec3836635734
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec3836635734.dir/link.txt --verbose=1
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create    CMakeFiles/cmTryCompileExec3836635734.dir/CheckFunctionExists.c.o  -o cmTryCompileExec3836635734 -rdynamic -lpthreads 
+/usr/bin/ld: 找不到 -lpthreads
+collect2: error: ld returned 1 exit status
+make[1]:正在离开目录 `/home/null/ros_ws/modular_joint_ws_1/build/CMakeFiles/CMakeTmp'
+make[1]: *** [cmTryCompileExec3836635734] 错误 1
+make: *** [cmTryCompileExec3836635734/fast] 错误 2
+
+
+Determining if the Q_WS_WIN exist failed with the following output:
+Change Dir: /home/null/ros_ws/modular_joint_ws_1/build/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec2975379879/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec2975379879.dir/build.make CMakeFiles/cmTryCompileExec2975379879.dir/build
+make[1]: 正在进入目录 `/home/null/ros_ws/modular_joint_ws_1/build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/null/ros_ws/modular_joint_ws_1/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building CXX object CMakeFiles/cmTryCompileExec2975379879.dir/CheckSymbolExists.cxx.o
+/usr/bin/c++    -I/usr/include/qt4    -o CMakeFiles/cmTryCompileExec2975379879.dir/CheckSymbolExists.cxx.o -c /home/null/ros_ws/modular_joint_ws_1/build/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx
+/home/null/ros_ws/modular_joint_ws_1/build/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx: In function ‘int main(int, char**)’:
+/home/null/ros_ws/modular_joint_ws_1/build/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx:8:19: error: ‘Q_WS_WIN’ was not declared in this scope
+   return ((int*)(&Q_WS_WIN))[argc];
+                   ^
+make[1]: *** [CMakeFiles/cmTryCompileExec2975379879.dir/CheckSymbolExists.cxx.o] 错误 1
+make[1]:正在离开目录 `/home/null/ros_ws/modular_joint_ws_1/build/CMakeFiles/CMakeTmp'
+make: *** [cmTryCompileExec2975379879/fast] 错误 2
+
+File /home/null/ros_ws/modular_joint_ws_1/build/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx:
+/* */
+#include <QtCore/qglobal.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef Q_WS_WIN
+  return ((int*)(&Q_WS_WIN))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the Q_WS_QWS exist failed with the following output:
+Change Dir: /home/null/ros_ws/modular_joint_ws_1/build/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec36896003/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec36896003.dir/build.make CMakeFiles/cmTryCompileExec36896003.dir/build
+make[1]: 正在进入目录 `/home/null/ros_ws/modular_joint_ws_1/build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/null/ros_ws/modular_joint_ws_1/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building CXX object CMakeFiles/cmTryCompileExec36896003.dir/CheckSymbolExists.cxx.o
+/usr/bin/c++    -I/usr/include/qt4    -o CMakeFiles/cmTryCompileExec36896003.dir/CheckSymbolExists.cxx.o -c /home/null/ros_ws/modular_joint_ws_1/build/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx
+/home/null/ros_ws/modular_joint_ws_1/build/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx: In function ‘int main(int, char**)’:
+/home/null/ros_ws/modular_joint_ws_1/build/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx:8:19: error: ‘Q_WS_QWS’ was not declared in this scope
+   return ((int*)(&Q_WS_QWS))[argc];
+                   ^
+make[1]: *** [CMakeFiles/cmTryCompileExec36896003.dir/CheckSymbolExists.cxx.o] 错误 1
+make[1]:正在离开目录 `/home/null/ros_ws/modular_joint_ws_1/build/CMakeFiles/CMakeTmp'
+make: *** [cmTryCompileExec36896003/fast] 错误 2
+
+File /home/null/ros_ws/modular_joint_ws_1/build/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx:
+/* */
+#include <QtCore/qglobal.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef Q_WS_QWS
+  return ((int*)(&Q_WS_QWS))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the Q_WS_MAC exist failed with the following output:
+Change Dir: /home/null/ros_ws/modular_joint_ws_1/build/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec2779325128/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec2779325128.dir/build.make CMakeFiles/cmTryCompileExec2779325128.dir/build
+make[1]: 正在进入目录 `/home/null/ros_ws/modular_joint_ws_1/build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/null/ros_ws/modular_joint_ws_1/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building CXX object CMakeFiles/cmTryCompileExec2779325128.dir/CheckSymbolExists.cxx.o
+/usr/bin/c++    -I/usr/include/qt4    -o CMakeFiles/cmTryCompileExec2779325128.dir/CheckSymbolExists.cxx.o -c /home/null/ros_ws/modular_joint_ws_1/build/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx
+/home/null/ros_ws/modular_joint_ws_1/build/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx: In function ‘int main(int, char**)’:
+/home/null/ros_ws/modular_joint_ws_1/build/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx:8:19: error: ‘Q_WS_MAC’ was not declared in this scope
+   return ((int*)(&Q_WS_MAC))[argc];
+                   ^
+make[1]: *** [CMakeFiles/cmTryCompileExec2779325128.dir/CheckSymbolExists.cxx.o] 错误 1
+make[1]:正在离开目录 `/home/null/ros_ws/modular_joint_ws_1/build/CMakeFiles/CMakeTmp'
+make: *** [cmTryCompileExec2779325128/fast] 错误 2
+
+File /home/null/ros_ws/modular_joint_ws_1/build/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx:
+/* */
+#include <QtCore/qglobal.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef Q_WS_MAC
+  return ((int*)(&Q_WS_MAC))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
