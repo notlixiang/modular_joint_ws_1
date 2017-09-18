@@ -6,6 +6,7 @@
 # testing this directory and lists subdirectories to be tested as well.
 SUBDIRS(gtest)
 SUBDIRS(GUI/GUI_Control)
+SUBDIRS(car_GUI/car_gui)
 SUBDIRS(hardWare/hardWare_setting)
 SUBDIRS(robot_msgs)
 SUBDIRS(driver_for_ros/ros_driver)

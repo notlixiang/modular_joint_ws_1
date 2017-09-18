@@ -122,20 +122,6 @@ iostream
 ../include/GUI_Control/main_window.hpp
 /home/null/ros_ws/modular_joint_ws_1/src/GUI/GUI_Control/include/GUI_Control/main_window.hpp
 
-/home/null/ros_ws/modular_joint_ws_1/src/GUI/GUI_Control/src/qnode.cpp
-ros/ros.h
--
-ros/network.h
--
-string
--
-std_msgs/String.h
--
-sstream
--
-../include/GUI_Control/qnode.hpp
-/home/null/ros_ws/modular_joint_ws_1/src/GUI/GUI_Control/include/GUI_Control/qnode.hpp
-
 /opt/ros/indigo/include/XmlRpcDecl.h
 ros/macros.h
 -
@@ -379,12 +365,6 @@ boost/type_traits/remove_reference.hpp
 -
 
 /opt/ros/indigo/include/ros/names.h
-forwards.h
-/opt/ros/indigo/include/ros/forwards.h
-common.h
-/opt/ros/indigo/include/ros/common.h
-
-/opt/ros/indigo/include/ros/network.h
 forwards.h
 /opt/ros/indigo/include/ros/forwards.h
 common.h
@@ -807,22 +787,6 @@ std_msgs/Header.h
 -
 
 /opt/ros/indigo/include/std_msgs/Header.h
-string
--
-vector
--
-map
--
-ros/types.h
--
-ros/serialization.h
--
-ros/builtin_message_traits.h
--
-ros/message_operations.h
--
-
-/opt/ros/indigo/include/std_msgs/String.h
 string
 -
 vector

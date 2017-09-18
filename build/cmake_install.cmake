@@ -118,6 +118,7 @@ IF(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
   INCLUDE("/home/null/ros_ws/modular_joint_ws_1/build/gtest/cmake_install.cmake")
   INCLUDE("/home/null/ros_ws/modular_joint_ws_1/build/GUI/GUI_Control/cmake_install.cmake")
+  INCLUDE("/home/null/ros_ws/modular_joint_ws_1/build/car_GUI/car_gui/cmake_install.cmake")
   INCLUDE("/home/null/ros_ws/modular_joint_ws_1/build/hardWare/hardWare_setting/cmake_install.cmake")
   INCLUDE("/home/null/ros_ws/modular_joint_ws_1/build/robot_msgs/cmake_install.cmake")
   INCLUDE("/home/null/ros_ws/modular_joint_ws_1/build/driver_for_ros/ros_driver/cmake_install.cmake")

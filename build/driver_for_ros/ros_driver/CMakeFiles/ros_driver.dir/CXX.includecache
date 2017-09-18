@@ -66,52 +66,6 @@ sensor_msgs/JointState.h
 trajectory_msgs/JointTrajectory.h
 -
 
-/home/null/ros_ws/modular_joint_ws_1/src/driver_for_ros/ros_driver/src/main.cpp
-iostream
--
-ros/ros.h
--
-../include/ros_driver/qnode.hpp
-/home/null/ros_ws/modular_joint_ws_1/src/driver_for_ros/ros_driver/include/ros_driver/qnode.hpp
-QProcess
--
-QTextStream
--
-QFile
--
-vector
--
-QMessageBox
--
-QTimer
--
-QObject
--
-QThread
--
-QApplication
--
-
-/home/null/ros_ws/modular_joint_ws_1/src/driver_for_ros/ros_driver/src/qnode.cpp
-ros/ros.h
--
-ros/network.h
--
-string
--
-std_msgs/String.h
--
-sstream
--
-../include/ros_driver/qnode.hpp
-/home/null/ros_ws/modular_joint_ws_1/src/driver_for_ros/ros_driver/include/ros_driver/qnode.hpp
-ctime
--
-numeric
--
-QString
--
-
 /opt/ros/indigo/include/XmlRpcDecl.h
 ros/macros.h
 -
@@ -734,12 +688,6 @@ forwards.h
 common.h
 /opt/ros/indigo/include/ros/common.h
 
-/opt/ros/indigo/include/ros/network.h
-forwards.h
-/opt/ros/indigo/include/ros/forwards.h
-common.h
-/opt/ros/indigo/include/ros/common.h
-
 /opt/ros/indigo/include/ros/node_handle.h
 ros/forwards.h
 /opt/ros/indigo/include/ros/ros/forwards.h
@@ -1172,22 +1120,6 @@ ros/builtin_message_traits.h
 ros/message_operations.h
 -
 
-/opt/ros/indigo/include/std_msgs/String.h
-string
--
-vector
--
-map
--
-ros/types.h
--
-ros/serialization.h
--
-ros/builtin_message_traits.h
--
-ros/message_operations.h
--
-
 /opt/ros/indigo/include/trajectory_msgs/JointTrajectory.h
 string
 -
@@ -1242,14 +1174,6 @@ iterator
 list
 -
 
-/usr/include/qt4/QtCore/QFile
-qfile.h
-/usr/include/qt4/QtCore/qfile.h
-
-/usr/include/qt4/QtCore/QObject
-qobject.h
-/usr/include/qt4/QtCore/qobject.h
-
 /usr/include/qt4/QtCore/QPoint
 qpoint.h
 /usr/include/qt4/QtCore/qpoint.h
@@ -1258,25 +1182,9 @@ qpoint.h
 qpoint.h
 /usr/include/qt4/QtCore/qpoint.h
 
-/usr/include/qt4/QtCore/QProcess
-qprocess.h
-/usr/include/qt4/QtCore/qprocess.h
-
-/usr/include/qt4/QtCore/QString
-qstring.h
-/usr/include/qt4/QtCore/qstring.h
-
-/usr/include/qt4/QtCore/QTextStream
-qtextstream.h
-/usr/include/qt4/QtCore/qtextstream.h
-
 /usr/include/qt4/QtCore/QThread
 qthread.h
 /usr/include/qt4/QtCore/qthread.h
-
-/usr/include/qt4/QtCore/QTimer
-qtimer.h
-/usr/include/qt4/QtCore/qtimer.h
 
 /usr/include/qt4/QtCore/qabstractitemmodel.h
 QtCore/qvariant.h
@@ -1454,16 +1362,6 @@ QtCore/qatomic_bootstrap.h
 QtCore/qatomic_arch.h
 -
 
-/usr/include/qt4/QtCore/qbasictimer.h
-QtCore/qglobal.h
--
-
-/usr/include/qt4/QtCore/qbuffer.h
-QtCore/qiodevice.h
--
-QtCore/qbytearray.h
--
-
 /usr/include/qt4/QtCore/qbytearray.h
 QtCore/qatomic.h
 -
@@ -1482,16 +1380,6 @@ QtCore/qglobal.h
 
 /usr/include/qt4/QtCore/qconfig.h
 
-/usr/include/qt4/QtCore/qcoreapplication.h
-QtCore/qobject.h
--
-QtCore/qcoreevent.h
--
-QtCore/qeventloop.h
--
-QtCore/qstringlist.h
--
-
 /usr/include/qt4/QtCore/qcoreevent.h
 QtCore/qnamespace.h
 -
@@ -1506,10 +1394,6 @@ QtCore/qscopedpointer.h
 QtCore/qiodevice.h
 -
 QtCore/qglobal.h
--
-
-/usr/include/qt4/QtCore/qeventloop.h
-QtCore/qobject.h
 -
 
 /usr/include/qt4/QtCore/qfeatures.h
@@ -1672,18 +1556,6 @@ QtCore/qdatastream.h
 QtCore/qnamespace.h
 -
 
-/usr/include/qt4/QtCore/qpointer.h
-QtCore/qobject.h
--
-
-/usr/include/qt4/QtCore/qprocess.h
-QtCore/qiodevice.h
--
-QtCore/qstringlist.h
--
-QtCore/qshareddata.h
--
-
 /usr/include/qt4/QtCore/qrect.h
 QtCore/qsize.h
 -
@@ -1780,38 +1652,10 @@ Qt3Support/q3valuelist.h
 QtCore/qstring.h
 -
 
-/usr/include/qt4/QtCore/qtextcodec.h
-QtCore/qstring.h
--
-QtCore/qlist.h
--
-
-/usr/include/qt4/QtCore/qtextstream.h
-QtCore/qiodevice.h
--
-QtCore/qstring.h
--
-QtCore/qchar.h
--
-QtCore/qlocale.h
--
-QtCore/qscopedpointer.h
--
-QtCore/qtextcodec.h
--
-stdio.h
--
-
 /usr/include/qt4/QtCore/qthread.h
 QtCore/qobject.h
 -
 limits.h
--
-
-/usr/include/qt4/QtCore/qtimer.h
-QtCore/qbasictimer.h
--
-QtCore/qobject.h
 -
 
 /usr/include/qt4/QtCore/qvariant.h
@@ -1854,14 +1698,6 @@ QtCore/QPointF
 QtCore/QPoint
 -
 
-/usr/include/qt4/QtGui/QApplication
-qapplication.h
-/usr/include/qt4/QtGui/qapplication.h
-
-/usr/include/qt4/QtGui/QMessageBox
-qmessagebox.h
-/usr/include/qt4/QtGui/qmessagebox.h
-
 /usr/include/qt4/QtGui/QPlatformWindow
 qplatformwindow_qpa.h
 /usr/include/qt4/QtGui/qplatformwindow_qpa.h
@@ -1900,28 +1736,6 @@ QtGui/qwidget.h
 QtGui/qvalidator.h
 -
 
-/usr/include/qt4/QtGui/qapplication.h
-QtCore/qcoreapplication.h
--
-QtGui/qwindowdefs.h
--
-QtCore/qpoint.h
--
-QtCore/qsize.h
--
-QtGui/qcursor.h
--
-QtGui/qdesktopwidget.h
--
-QtGui/qwidget.h
--
-QtGui/qpalette.h
--
-QtGui/qrgb.h
--
-QtGui/qtransportauth_qws.h
--
-
 /usr/include/qt4/QtGui/qbrush.h
 QtCore/qpair.h
 -
@@ -1954,14 +1768,6 @@ QtCore/qstringlist.h
 QtCore/qpoint.h
 -
 QtGui/qwindowdefs.h
--
-
-/usr/include/qt4/QtGui/qdesktopwidget.h
-QtGui/qwidget.h
--
-
-/usr/include/qt4/QtGui/qdialog.h
-QtGui/qwidget.h
 -
 
 /usr/include/qt4/QtGui/qdrag.h
@@ -2082,10 +1888,6 @@ QtCore/qpoint.h
 QtCore/qrect.h
 -
 QtGui/qwmatrix.h
--
-
-/usr/include/qt4/QtGui/qmessagebox.h
-QtGui/qdialog.h
 -
 
 /usr/include/qt4/QtGui/qmime.h
@@ -2258,22 +2060,6 @@ QtCore/qline.h
 QtCore/qpoint.h
 -
 QtCore/qrect.h
--
-
-/usr/include/qt4/QtGui/qtransportauth_qws.h
-QtCore/qglobal.h
--
-QtCore/qobject.h
--
-QtCore/qhash.h
--
-QtCore/qstring.h
--
-QtCore/qbuffer.h
--
-QtCore/qpointer.h
--
-sys/types.h
 -
 
 /usr/include/qt4/QtGui/qvalidator.h

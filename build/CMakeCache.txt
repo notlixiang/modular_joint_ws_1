@@ -869,6 +869,12 @@ can_test_02_BINARY_DIR:STATIC=/home/null/ros_ws/modular_joint_ws_1/build/can_tes
 //Value Computed by CMake
 can_test_02_SOURCE_DIR:STATIC=/home/null/ros_ws/modular_joint_ws_1/src/can_test_02
 
+//Value Computed by CMake
+car_gui_BINARY_DIR:STATIC=/home/null/ros_ws/modular_joint_ws_1/build/car_GUI/car_gui
+
+//Value Computed by CMake
+car_gui_SOURCE_DIR:STATIC=/home/null/ros_ws/modular_joint_ws_1/src/car_GUI/car_gui
+
 //The directory containing a CMake configuration file for catkin.
 catkin_DIR:PATH=/opt/ros/indigo/share/catkin/cmake
 
@@ -1089,7 +1095,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_LOCAL_GENERATORS:INTERNAL=9
+CMAKE_NUMBER_OF_LOCAL_GENERATORS:INTERNAL=10
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP

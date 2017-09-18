@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/smj/ros/ws_show/src/car_GUI/car_gui_build/devel/setup.sh

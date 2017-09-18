@@ -1,0 +1,8 @@
+prefix=/home/smj/ros/ws_show/src/car_GUI/car_gui_build/devel
+
+Name: car_gui
+Description: Description of car_gui
+Version: 0.1.0
+Cflags: 
+Libs: -L/home/smj/ros/ws_show/src/car_GUI/car_gui_build/devel/lib 
+Requires: 

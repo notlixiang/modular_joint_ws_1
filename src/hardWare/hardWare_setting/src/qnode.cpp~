@@ -229,7 +229,7 @@ void CUpToDown::run() {
                     }
                     msg_up_to_down.ID[0] = CAN_ID[global_index];
                     msg_up_to_down.SPEED.resize(1);
-                    msg_up_to_down.SPEED[0] = 0.3;
+                    msg_up_to_down.SPEED[0] = 1.5;
                     msg_up_to_down.CURRENT.resize(0);
                     msg_up_to_down.MODE = 9;
                     pub_up_to_down.publish(msg_up_to_down);
@@ -244,7 +244,7 @@ void CUpToDown::run() {
                     }
                     msg_up_to_down.ID[0] = CAN_ID[global_index];
                     msg_up_to_down.SPEED.resize(1);
-                    msg_up_to_down.SPEED[0] = 0.3;
+                    msg_up_to_down.SPEED[0] = 1.5;
                     msg_up_to_down.CURRENT.resize(0);
                     msg_up_to_down.MODE = 9;
                     pub_up_to_down.publish(msg_up_to_down);
